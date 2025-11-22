@@ -16,18 +16,6 @@ The following files are provided:
 
 **Note:** the starter codes do not compile by doing `javac *.java` because they are not completed. When you complete a class, you should write a tester to test your individual methods in that class. In the end, you can use `CritterGUI.jar` to run the simulation.
 
-### Using the Simulator
-
-To run the simulator, use: `java -jar CritterGUI.jar`
-
-**Features to Help You:**
-- **Preset Configurations**: Choose from Quick Test (10x10, 5 critters), Standard (25x25, 25 critters), or Full Battle (60x50, 50 critters) for easy setup
-- **Pause on Exception**: When enabled (default), the simulation automatically pauses if your critter throws an exception, showing you exactly where the error occurred
-- **Step-by-Step Debugging**: Use the "Tick" button to advance the simulation one move at a time - perfect for debugging your critter's behavior
-- **Debug Output**: Enable to see each critter's actions printed to the console
-- **Status Bar**: Shows the current leader and helpful tips at the bottom of the window
-- **Tooltips**: Hover over buttons to see keyboard shortcuts and helpful hints 
-
 ## Goal
 Programming Assignment 7 is an introduction to inheritance in Java. In this assignment, you will write several classes for various critters who will face off against each other in an arena.
 
@@ -44,7 +32,7 @@ Several classes in the starter code implement a graphical simulation of a 2D wor
 
 The Critter World is divided into cells with integer coordinates. The world is 60 cells wide and 50 cells tall by default. The upper-left cell has x-coordinates and y-coordinates (0, 0). The x-coordinate **increases to the right**. The y-coordinate **increases downwards**. 
 
-![](https://raw.githubusercontent.com/timstjiang/images/main/1.png)
+![Arena Example](pics/arena.png)
 
 **NOTE: the following mechanics are already implemented in the Critter simulator, e.g. when two critters fight, the simulator decides who wins based on what the attack each critter uses. Your task for this assignment is to define behaviors for each critter. i.e. you just need to write the methods but don't need to call them.**
 
@@ -64,7 +52,7 @@ The winning animal survives and the losing animal is removed from the game. Each
 
 The following table summarizes the choices and which animal will survive in each case. To remember which beats which, notice that the starting letters of "Roar, Pounce, Scratch" match those of "Rock, Paper, Scissors." If the animals make the same choice, the winner is chosen with a coin flip.
 
-![](https://raw.githubusercontent.com/timstjiang/images/main/2.png)
+![attack](pics/attack.png)
 
 The cases above are based on the following rules:
 
@@ -107,7 +95,7 @@ Below is a diagram for the Critter World. Critter is an abstract class and you c
 
 Each class must extend Critter (or something else that extends Critter). 
 
-![](https://raw.githubusercontent.com/timstjiang/images/main/3.png)
+![Critter Inheritance Diagram](pics/critter.png)
 
 ### Running the Simulator
 
@@ -115,13 +103,31 @@ Note: Don't try doing this before you have implemented the files. It will not ev
 
 We will now go through the process of running the simulator. First compile all the necessary classes (note: `Starfish.java` and `Feline.java` as it is provided will not compile). You can compile separately if needed, but `javac *.java` is most convenient. Next, run the simulator with `java -jar CritterGUI.jar`. 
 
-The following screen will appear. Enabling "Debug output" will print the actions your critters take to the terminal. You can also choose the number of critters that initially appear in the world, and select which critters that will start in the world.
+#### Simulator Features
 
-![](https://raw.githubusercontent.com/timstjiang/images/main/4.png)
+**Preset Configurations**: When you first run the simulator, you'll be prompted to choose a preset:
 
-You have many options in the next screen. You can start, stop, and adjust the speed of the simulation. "Speed" controls how fast each round occurs. For visual testing, you can click Tick, which will run one round of the simulation. If you would like to toggle debug messages on your terminal as your simulation runs, click the checkbox for "Debug". 
+![Welcome Screen - Choose Preset](pics/welcome.png)
 
-![](https://raw.githubusercontent.com/timstjiang/images/main/5.png)
+- **Quick Test** (10x10, 5 critters) - Perfect for rapid testing during development
+- **Standard** (25x25, 25 critters) - Balanced simulation for general testing
+- **Full Battle** (60x50, 50 critters) - Large-scale simulation for final testing
+- **Custom...** - Advanced users can customize all settings
+
+Then you'll see this settings screen where you can configure critters:
+
+![Custom Settings Screen](pics/critters_setting.png)
+
+**Helpful Features**:
+- **Pause on Exception** (enabled by default): The simulation automatically pauses if your critter throws an exception, showing you exactly where the error occurred in your code
+- **Step-by-Step Debugging**: Use the "Tick" button to advance the simulation one move at a time - perfect for debugging your critter's behavior
+- **Debug Output**: Enable to see each critter's actions printed to the console
+- **Status Bar**: Shows the current leader and helpful tips at the bottom of the window
+- **Tooltips**: Hover over buttons to see keyboard shortcuts (G=Go, S=Stop, T=Tick, R=Reset)
+
+Once the simulation starts, you have many options. You can start, stop, and adjust the speed of the simulation. "Speed" controls how fast each round occurs. For visual testing, you can click Tick, which will run one round of the simulation. The status bar at the bottom shows helpful information and the current leader.
+
+![Main Simulator Window](pics/speed.png)
 
 ### Implementation
 
