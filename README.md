@@ -12,9 +12,21 @@ The following files are provided:
 * `Starfish.java`: Patrick Star, he lives in Bikini Bottom.
 * `Feline.java`: starter code for Feline.
 * `CritterInfo.java`: provides context about the Critter and the current simulation. (**Please read the method headers provided to gain a better understanding.**)
-* `CritterGUI.jar`: A GUI simulator for your classes.
+* `CritterGUI.jar`: A GUI simulator for your classes with helpful debugging features.
 
-**Note:** the starter codes do not compile by doing `javac *.java` because they are not completed. When you complete a class, you should write a tester to test your individual methods in that class. In the end, you can use `CritterGUI.jar` to run the simulation. 
+**Note:** the starter codes do not compile by doing `javac *.java` because they are not completed. When you complete a class, you should write a tester to test your individual methods in that class. In the end, you can use `CritterGUI.jar` to run the simulation.
+
+### Using the Simulator
+
+To run the simulator, use: `java -jar CritterGUI.jar`
+
+**Features to Help You:**
+- **Preset Configurations**: Choose from Quick Test (10x10, 5 critters), Standard (25x25, 25 critters), or Full Battle (60x50, 50 critters) for easy setup
+- **Pause on Exception**: When enabled (default), the simulation automatically pauses if your critter throws an exception, showing you exactly where the error occurred
+- **Step-by-Step Debugging**: Use the "Tick" button to advance the simulation one move at a time - perfect for debugging your critter's behavior
+- **Debug Output**: Enable to see each critter's actions printed to the console
+- **Status Bar**: Shows the current leader and helpful tips at the bottom of the window
+- **Tooltips**: Hover over buttons to see keyboard shortcuts and helpful hints 
 
 ## Goal
 Programming Assignment 7 is an introduction to inheritance in Java. In this assignment, you will write several classes for various critters who will face off against each other in an arena.
@@ -121,10 +133,11 @@ You have many options in the next screen. You can start, stop, and adjust the sp
 >    - `java.util.Arrays`
 >    - `java.util.ArrayList`
 > 3. Read through all the methods you are supposed to implement for a class before starting to write anything for that class. These methods are related to each other most of the time!
-> 4. **Don't use any methods in CritterInfo in the constructor.** They'll be set after the objects are initialized and loaded into the simulator, so using that in the constructor will create NullPointerException. 
-> 5. For the overriding methods (specified below), **please use `@Override` annotation** to ensure best practice. This annotation indicates that the child class method is over-writing its super class method. If this annotation causes a warning, that means your method is not overriding, and could indicate issues with your method signature.
-> 6. **Study the diagram provided in the earlier section carefully**. The Critter World has animals where each animal is of type **Critter**. The animal can either be of moving type (i.e. Leopard) or stationary type (i.e. Starfish). When color is involved, use the static colors that comes from the [Color](https://docs.oracle.com/javase/10/docs/api/java/awt/Color.html) class that have the same name as the color we specify. 
-> 7. Other than `Starfish.java` and `Feline.java`, you will **need to create each of the other critters' .java files from scratch**.
+> 4. **Using CritterInfo:** You have access to a `CritterInfo` object through the inherited instance variable `info`. You can call methods like `info.getNeighbor(Direction.NORTH)`, `info.getX()`, `info.getY()`, etc. in your overridden methods. The `CritterInfo` interface is already fully implemented by the simulator - you don't need to implement it yourself.
+> 5. **Don't use `info` in the constructor.** The `info` object is set by the simulator after your critter is created. Using it in the constructor will cause a NullPointerException. Only use `info` in your overridden methods like `getMove()`, `eat()`, etc.
+> 6. For the overriding methods (specified below), **please use `@Override` annotation** to ensure best practice. This annotation indicates that the child class method is over-writing its super class method. If this annotation causes a warning, that means your method is not overriding, and could indicate issues with your method signature.
+> 7. **Study the diagram provided in the earlier section carefully**. The Critter World has animals where each animal is of type **Critter**. The animal can either be of moving type (i.e. Leopard) or stationary type (i.e. Starfish). When color is involved, use the static colors that comes from the [Color](https://docs.oracle.com/javase/10/docs/api/java/awt/Color.html) class that have the same name as the color we specify. 
+> 8. Other than `Starfish.java` and `Feline.java`, you will **need to create each of the other critters' .java files from scratch**.
 
 ### Critter 
 
@@ -147,30 +160,35 @@ Starfish are very interesting creatures. One particularly interesting specimen i
 * **No-arg constructor**: The string representation of Turtle is "Tu".
 * **Override `getColor()`**: Turtles are GREEN.
 * **Override `getMove()`**: Turtles always move WEST.
-* **Override `eat()`**: Turtles like to play it safe when eating. They only eat when there are no hostile animals adjacent to the Turtle (hostile animals are anything that is not an empty space, food, or Turtle).
+* **Override `eat()`**: Turtles like to play it safe when eating. They only eat when there are no hostile animals adjacent to the Turtle in all four directions (NORTH, SOUTH, EAST, WEST). Hostile animals are anything that is not an empty space (" "), food ("."), or another Turtle ("Tu"). 
+    * **Hint:** Check all four neighbors using `info.getNeighbor()`. If any neighbor is hostile, return false.
 * **Override `getAttack()`**: Turtles don't always fight, but sometimes they do. Turtles attack with ROAR 50% of the time and FORFEIT the other 50%. Slow and steady wins the race, after all.
 
 ### Feline extends Critter
 
 * **Instance variables**: Each Feline will keep track of the number of times it has moved, the amount of times it has not eaten, and the current direction it is going in. These have been provided for you.
-* **No-arg constructor**: A default no-arg constructor. The Critter should not be hungry until its third encounter with food. `moveCount` should be set such that it will change to a new direction at the next (first) call to `getMove()`. This means that Feline should not start eating once it is created (look at `eat()`). The string representation of Feline is "Fe". 
-* **Override `getMove()`**: Felines are jumpy and tend to go in random directions, so it will go in a new random direction (excluding CENTER) after every 5th move that it makes. 
-    * If the Feline picks NORTH as its first direction, and SOUTH as its next random direction its moves would be: NORTH, NORTH, NORTH, NORTH, NORTH, SOUTH, SOUTH, SOUTH, SOUTH, SOUTH.
-    * NOTE: "new random direction" here means a newly chosen direction, not necessarily a unique/different direction. If Feline went NORTH for 5 moves, it should still be able to choose NORTH as its next 5 moves.
-* **Override `eat()`**: Felines don't need to eat that much, so every 3rd time it encounters food, it will eat.
-    * NOTE: The feline will eat after 2 times of encountering food and not eating. For the first 6 times the feline encounters food, its eating pattern should be:
-    false, false, **true**, false, false, **true**
+* **No-arg constructor**: Initialize the Feline with display name "Fe" and set up the instance variables appropriately so that the behaviors described below work correctly from the first method call.
+* **Override `getMove()`**: Felines are jumpy and tend to go in random directions. A Feline will pick a new random direction (excluding CENTER) and move in that direction for exactly 5 moves, then pick a new random direction and repeat.
+    * Example: If the Feline picks NORTH as its first direction, and SOUTH as its next random direction, its moves would be: NORTH, NORTH, NORTH, NORTH, NORTH, SOUTH, SOUTH, SOUTH, SOUTH, SOUTH.
+    * NOTE: "new random direction" here means a newly chosen direction, not necessarily a unique/different direction. If Feline went NORTH for 5 moves, it could still choose NORTH as its next 5 moves.
+    * HINT: The Feline should pick its first random direction on the **first** call to `getMove()`, not in the constructor.
+* **Override `eat()`**: Felines don't need to eat that much, so they only eat every 3rd time they encounter food.
+    * Example: For the first 6 times the Feline encounters food, its eating pattern should be: false, false, **true**, false, false, **true**
+    * HINT: The Feline should **not** eat on its first encounter with food.
 * **Override `getAttack()`**: Felines should always POUNCE.
 
 ### Lion extends Feline
 
-* **Instance variables**: Each Lion will keep track of the number of fights it wins until it goes to sleep, which will determine its eating behavior. Losing a fight does not decrease the instance variable. You may need a few private variables to keep track of the Lion's movement.
-* **No-arg constructor**: A default no-arg constructor. The string representation of Lion is "Lion". Changing the name after calling the no-arg constructor is preferred.
-* **Override `getColor()`**: a Lion is YELLOW. 
-* **Override `getMove()`**: The king of beasts does not fear other critters, and they wait for their chance to engage. A Lion will first go EAST 5 times, then SOUTH 5 times, then WEST 5 times, then NORTH 5 times (i.e. a clockwise square pattern). Think about what instance variable to initialize to keep track of its movement.
-* **Override `eat()`**: Return true if the Lion has won _at least one fight_ since it last ate or slept. Think of the Lion as having a "hunger" that is triggered by fighting. Initially the Lion is not hungry, but winning a fight makes the Lion hungry. When a Lion is hungry, the next call to the eating method should return true. However, once the Lion has eaten OR slept (when `sleep()` is called), the future calls of `eat()` should return false until the next win. (Hint: Think about how `sleep()` would make a lion full again.)
+* **Instance variables**: Each Lion will keep track of the number of fights it wins until it goes to sleep, which will determine its eating behavior. Losing a fight does not decrease the instance variable. You may need additional private variables to keep track of the Lion's movement pattern.
+* **No-arg constructor**: Initialize the Lion with display name "Lion" and set up instance variables appropriately. 
+    * HINT: Call the superclass constructor, then set the display name.
+* **Override `getColor()`**: Lions are YELLOW. 
+* **Override `getMove()`**: The king of beasts does not fear other critters, and they wait for their chance to engage. A Lion will move in a clockwise square pattern: EAST 5 times, then SOUTH 5 times, then WEST 5 times, then NORTH 5 times, then repeat.
+* **Override `eat()`**: Lions have a "hunger" that is triggered by fighting. Initially the Lion is not hungry. Winning a fight makes the Lion hungry. When hungry, the Lion will eat the next time it encounters food. After eating OR sleeping, the Lion is no longer hungry and will not eat again until it wins another fight.
+    * In other words: Return true if the Lion has won at least one fight since it last ate or slept.
 * **Override `sleep()` and `wakeup()`**: When a Lion goes to sleep, it will reset the number of fights it won to zero, and reverse its display name to "noiL". When it wakes up, it reverts back to "Lion". 
     * Note: Handle the behavior of `sleep()` and `wakeup()` separately in their own respective methods.
+    * **Important:** Use the inherited `setDisplayName(String name)` method to change the display name. For example: `setDisplayName("noiL")` when sleeping and `setDisplayName("Lion")` when waking up.
 * **Override `win()`**: When a Lion wins a fight, it becomes hungry. Make sure to keep track of the number of fights it wins as this affects its eating behavior. 
 * **Do not override `getAttack()`**. It should have the same behavior as Feline.  
 
@@ -178,30 +196,34 @@ Starfish are very interesting creatures. One particularly interesting specimen i
 
 * **Variables**: Each Leopard, in addition to the instance variables inherited from its superclasses, will all telepathically keep track of their `confidence` together. The confidence starts at 0 when the simulation starts. When the confidence of one Leopard is affected, ALL Leopards' confidence will be affected in the exact same way.  
     * **Hint:** What type of modifier can you apply to a variable to make that variable shared across all instances?
-    * Make this variable `protected`. The name should be `confidence` and the type should be `int`.
+    * Make this variable `protected static int confidence`. This means ALL Leopards (and Ocelots, since they extend Leopard) share the same confidence value.
 * **No-arg constructor**: The string representation of Leopard is "Lpd".
 * **Override `getColor()`**: Leopards are RED (for camouflage, of course).
-* **Override `getMove()`**: The Leopard always checks its neighbors before moving. If one of the four neighbors—NORTH, SOUTH, EAST, WEST— contains either food or Starfish, then the Leopard will move towards that direction. If more than one direction has Starfish or food, then the Leopard will move towards the first found direction. If none of the directions contain Starfish or food, then the Leopard will randomly choose a direction to move (excluding CENTER). (When checking the neighbors, please follow the **N S E W** order).
+* **Override `getMove()`**: The Leopard always checks its neighbors before moving. If one of the four neighbors—NORTH, SOUTH, EAST, WEST— contains either food (".") or Starfish ("Patrick"), then the Leopard will move towards that direction. If more than one direction has Starfish or food, then the Leopard will move towards the first found direction. If none of the directions contain Starfish or food, then the Leopard will randomly choose a direction to move (excluding CENTER). 
+    * **Important:** Check neighbors in the order NORTH, SOUTH, EAST, WEST. Use `info.getNeighbor(Direction.NORTH)` to check what's in each direction. The method returns the display string of what's there (".", "Patrick", "Tu", etc.) or an empty string " " for empty space.
 * **Override `eat()`**: The Leopards will always have (confidence * 10)% chance of eating. For example, if confidence is at 2, then there is a 20% chance of eating.
 * **Override `win()` and `lose()`**: If a Leopard wins a fight, all Leopards' confidence will increment by one if their confidence is less than 10. If a Leopard loses, all Leopards will reduce their confidence by 1 if their confidence is greater than zero. The minimum confidence they can have is 0, and the maximum is 10.  
-* **Override `getAttack(String opponent)`**: The Leopard will POUNCE if the opponent is Turtle or if all Leopards' confidence is greater than 5. Otherwise, the Leopard will randomly choose an attack method using `generateAttack(String opponent)`.
-    * You **must** create the **protected** helper method `generateAttack(String opponent)` to randomly choose an attack method between POUNCE, SCRATCH, and ROAR. However, if the opponent is a Starfish, it will FORFEIT.
+* **Override `getAttack(String opponent)`**: The Leopard will POUNCE if the opponent is "Tu" (Turtle) or if all Leopards' confidence is greater than 5. Otherwise, the Leopard will randomly choose an attack method using `generateAttack(String opponent)`.
+    * You **must** create the **protected** helper method `generateAttack(String opponent)` to randomly choose an attack method between POUNCE, SCRATCH, and ROAR. However, if the opponent is "Patrick" (Starfish), it will FORFEIT.
+    * **Note:** The `opponent` parameter is the display string (what you see on screen), not the class name.
 * **Override `reset()`:** Set the `confidence` back to 0.
 
 ### Ocelot extends Leopard
 
 * **No-arg constructor**: The string representation of Ocelot is "Oce".
 * **Override `getColor()`**: Ocelots are LIGHT GRAY.
-* **Override `generateAttack(String opponent)`**: If the opponent is a Lion, Feline, or a Leopard, the Ocelot will SCRATCH. Otherwise, the Ocelot will POUNCE. **NOTE: This method is called from getAttack(String opponent)**
-* **Do not override `getAttack(String opponent)`**: The Ocelot will attack in the following ways:
+* **Override `generateAttack(String opponent)`**: If the opponent is a Lion (display name "Lion" or "noiL"), Feline (display name "Fe"), or a Leopard (display name "Lpd"), the Ocelot will SCRATCH. Otherwise, the Ocelot will POUNCE. 
+    * **Important:** When a Lion sleeps, its display name changes to "noiL", so you must check for BOTH "Lion" AND "noiL" to properly detect Lions.
+    * **NOTE:** This method is called from the inherited `getAttack(String opponent)` method.
+* **Do not override `getAttack(String opponent)`**: The Ocelot inherits this from Leopard. The Ocelot will attack in the following ways:
     * If confidence is greater than 5 or the opponent is a Turtle, the Ocelot will POUNCE
-    * Otherwise, if the opponent is a Lion, Feline, or a Leopard, the Ocelot will SCRATCH. If not, the Ocelot will POUNCE. **NOTE: This takes place in `generateAttack(String opponent)`**
+    * Otherwise, the Ocelot uses `generateAttack(String opponent)` which will SCRATCH if the opponent is a Lion/Feline/Leopard, or POUNCE otherwise.
 
 ### Elephant extends Critter
 
-* **Variables**: Elephants share an int `goalX` and int `goalY` coordinate (make them protected, not private). An Elephant also inherits a `Random` object (from `Critter`) to generate random integers when picking new goal coordinates.
-    * **Hint**: For elephants to share coordinates, what should be included in the modifiers of `goalX` and `goalY`?
-* **No-arg constructor**: The string representation of Elephant is "El". The very first goalX and goalY should be (0,0).
+* **Variables**: Elephants share an int `goalX` and int `goalY` coordinate. Make them `protected static int goalX` and `protected static int goalY`. An Elephant also inherits a `Random` object (from `Critter`) to generate random integers when picking new goal coordinates.
+    * **Hint**: For elephants to share coordinates, what should be included in the modifiers of `goalX` and `goalY`? Answer: `static` makes them shared across all Elephants.
+* **No-arg constructor**: The string representation of Elephant is "El". Initialize `goalX` and `goalY` to (0,0) in the constructor (they start at 0 for all Elephants).
 * **Override `getColor()`**: Elephants are GRAY.
 * **Override `getMove()`**: Elephants are sensible creatures and know that they are safer if they move in herds. Because of this, Elephants have a precise movement pattern.
     * All elephants move towards the shared `goalX` and `goalY` coordinate in the simulation. Each Elephant moves towards their goal in the axis in which they are **further from their goal**. So if an Elephant is further from its goal in the x-axis, it would move EAST or WEST depending on the location of their goal and their current location. When an Elephant is  further from its goal in the y-axis, an Elephant would move NORTH or SOUTH. If the distances are **equal**, choose to move on either the x or y-axis (but be consistent with your choice - always choose x or always choose y).
