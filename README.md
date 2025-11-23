@@ -194,7 +194,7 @@ Starfish are very interesting creatures. One particularly interesting specimen i
     * In other words: Return true if the Lion has won at least one fight since it last ate or slept.
 * **Override `sleep()` and `wakeup()`**: When a Lion goes to sleep, it will reset the number of fights it won to zero, and reverse its display name to "noiL". When it wakes up, it reverts back to "Lion". 
     * Note: Handle the behavior of `sleep()` and `wakeup()` separately in their own respective methods.
-    * **Important:** Use the inherited `setDisplayName(String name)` method to change the display name. For example: `setDisplayName("noiL")` when sleeping and `setDisplayName("Lion")` when waking up.
+    * **Hint:** The `displayName` field is inherited from `Critter` and can be directly modified.
 * **Override `win()`**: When a Lion wins a fight, it becomes hungry. Make sure to keep track of the number of fights it wins as this affects its eating behavior. 
 * **Do not override `getAttack()`**. It should have the same behavior as Feline.  
 
